@@ -14,8 +14,9 @@ datasource db {
 }
 
 model Image {
-  id    Int    @id @default(autoincrement())
-  title String
-  desc  String
-  url   String
+  id      Int    @id @default(autoincrement())
+  title   String
+  desc    String
+  url     String
+  file_id String
 }

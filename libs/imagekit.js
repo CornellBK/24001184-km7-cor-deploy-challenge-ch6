@@ -5,7 +5,7 @@ const{
     IMAGEKIT_PRIVATE_KEY,
     IMAGEKIT_URL_ENDPOINT
 } = process.env
-// console.log(process.env.IMAGEKIT_PUBLIC_KEY);
+
 module.exports = new imageKit({
     publicKey: IMAGEKIT_PUBLIC_KEY,
     privateKey: IMAGEKIT_PRIVATE_KEY,
