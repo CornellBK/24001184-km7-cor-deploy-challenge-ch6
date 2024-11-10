@@ -25,7 +25,7 @@ jobs:
       with:
         project_id: ${{ secrets.PROJECT_ID }}
         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-        service_account_email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+        # workload identitynya butuh bikin provider baru, selain karena gbs bikin ini harusnya jalan
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
@@ -33,6 +33,22 @@ jobs:
         project_id: ${{ secrets.PROJECT_ID }}
 
     - name: 'Deploy to Compute Engine'
-      env:
-        GCP_SSH_PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
       run: |
+        # Define your VM instance name and zone
+        INSTANCE_NAME="your-instance-name"
+        ZONE="your-instance-zone"
+
+        # Run commands on the VM instance using gcloud
+        gcloud compute ssh $INSTANCE_NAME --zone=$ZONE --command="
+          # Navigate to project directory
+          cd /path/to/your/project
+
+          # Pull latest changes
+          git pull origin main
+
+          # Install dependencies
+          npm install
+
+          # Restart the server
+          pm2 restart app.js || pm2 start app.js
+        "
