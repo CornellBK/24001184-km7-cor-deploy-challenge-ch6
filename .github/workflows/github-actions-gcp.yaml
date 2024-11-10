@@ -5,11 +5,10 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     permissions:
@@ -24,12 +23,16 @@ jobs:
       id: auth
       uses: 'google-github-actions/auth@v2'
       with:
-        project_id: 'security-alexanderhose'
-        workload_identity_provider: 'projects/243190957191/locations/global/workloadIdentityPools/github-actions-provider/providers/github-actions-pool'
-        
+        project_id: ${{ secrets.PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+        service_account_email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
-      
-    - name: 'Describe Secrets'
+      with:
+        project_id: ${{ secrets.PROJECT_ID }}
+
+    - name: 'Deploy to Compute Engine'
+      env:
+        GCP_SSH_PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
       run: |
-        gcloud secrets describe "my-secret" --project="security-alexanderhose"
