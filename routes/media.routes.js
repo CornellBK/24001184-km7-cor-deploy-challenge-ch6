@@ -5,7 +5,11 @@ const multerUpload = require('../libs/multerUpload');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const restrictJwt = require('../middleware/restrictJwt')
+
 const joi = require('joi');
+
+router.use(restrictJwt);
 
 router.post('/upload-image', multerUpload.single('image'), MediaHandling.uploadImage);
 router.delete('/image/:image_id', MediaHandling.deleteImage);
