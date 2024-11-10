@@ -1,0 +1,35 @@
+name: Github-actions-gcp
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: 'Checkout code'
+      uses: 'actions/checkout@v2'
+
+    - name: 'Authenticate with GCP'
+      id: auth
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: 'security-alexanderhose'
+        workload_identity_provider: 'projects/243190957191/locations/global/workloadIdentityPools/github-actions-provider/providers/github-actions-pool'
+        
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+      
+    - name: 'Describe Secrets'
+      run: |
+        gcloud secrets describe "my-secret" --project="security-alexanderhose"
